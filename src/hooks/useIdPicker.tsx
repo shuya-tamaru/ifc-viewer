@@ -5,26 +5,22 @@ import { useEffect, useRef, useState } from "react";
 import { Object3D } from "three";
 
 import useLoadingState from "../stores/useLoadingState";
-import useIfcLoader from "./useIFCLoader";
 import useFocusId from "../stores/useFocusId";
 
 const useIdPicker = () => {
-  const ifcLoader = useIfcLoader();
-
   const { scene, raycaster, gl } = useThree();
   const canvas = gl.domElement;
 
-  const { loaded } = useLoadingState((state) => state);
+  const { loaded, loader } = useLoadingState((state) => state);
   const { setFocusId } = useFocusId((state) => state);
 
   const idRef = useRef<string>("");
-
   const [rayObjects, setRayObjects] = useState<Object3D[] | null>(null);
 
   useEffect(() => {
     if (loaded) {
       const model = scene.children.filter((mesh) => {
-        const ifc = mesh.type === "Mesh" && mesh.name !== "overray" && mesh;
+        const ifc = mesh.name === "ifc" && mesh;
         return ifc;
       });
       setRayObjects(model);
@@ -38,12 +34,12 @@ const useIdPicker = () => {
     if (rayObjects && rayObjects.length > 0) {
       raycaster.firstHitOnly = true;
       const obj = raycaster.intersectObjects(rayObjects);
-      if (obj.length > 0) {
+      if (obj.length > 0 && loader && loaded) {
         const ifcObject = obj[0];
         const index = ifcObject.faceIndex;
         const ifcModel = ifcObject.object as IFCModel;
         const geometry = ifcModel.geometry;
-        const ifc = ifcLoader.ifcManager;
+        const ifc = loader.ifcManager;
         const id: string = index
           ? ifc.getExpressId(geometry, index).toString()
           : "";

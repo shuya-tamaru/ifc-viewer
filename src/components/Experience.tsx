@@ -1,16 +1,18 @@
 import { OrbitControls } from "@react-three/drei";
 
-import useModelLoad from "../hooks/useModelLoad";
 import useIdPicker from "../hooks/useIdPicker";
+import LoadingOverRay from "./LoadingOverRay";
+import Model from "./Model";
 
 const Experience = () => {
-  useModelLoad();
   useIdPicker();
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <OrbitControls makeDefault />;
+      <LoadingOverRay />
+      <Model />
+      <ambientLight intensity={0.8} />
+      <OrbitControls makeDefault />
     </>
   );
 };

@@ -3,7 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import "./App.css";
 import Experience from "./components/Experience";
 import Interface from "./components/Interface";
-import LoadingBar from "./components/LoadingBar";
 
 function App() {
   return (
@@ -21,7 +20,6 @@ function App() {
           position: [10, 4, 10],
         }}
       >
-        <LoadingBar />
         <Experience />
       </Canvas>
       <Interface />
